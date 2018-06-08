@@ -21,3 +21,5 @@ for (i in 1:nrow(years)) {
 }
 
 mean(years$mean)
+
+journals <- unique(di$JI)
