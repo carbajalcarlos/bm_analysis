@@ -11,8 +11,15 @@ di_raw <- readFiles("0_input/di_wos_001.bib", "0_input/di_wos_002.bib", "0_input
                     "0_input/di_wos_021.bib", "0_input/di_wos_022.bib", "0_input/di_wos_023.bib", "0_input/di_wos_024.bib",
                     "0_input/di_wos_025.bib", "0_input/di_wos_026.bib")
 
+# Conversion to dataframe
+#ptm <- proc.time()
 di <- convert2df(file = di_raw, dbsource = "isi", format = "bibtex")
+#proc.time() - ptm
 
-duration = faithful$eruptions
-quantile(di$PY, seq(0,1,1/5), na.rm = TRUE)
-nrow(subset())
+# ----- Creating output files -----
+# Removing temporary files
+if(is.element(el = "ptm", set = ls())) { rm(ptm) }
+
+# # Saving the rare.comics subset
+save(file = "0_process/di_raw.Rdata", list = "di_raw")
+save(file = "0_process/di_df.Rdata", list = "di")
