@@ -11,6 +11,21 @@ raw <- readFiles("0_input/di_wos_001.bib", "0_input/di_wos_002.bib", "0_input/di
                  "0_input/di_wos_021.bib", "0_input/di_wos_022.bib", "0_input/di_wos_023.bib", "0_input/di_wos_024.bib",
                  "0_input/di_wos_025.bib", "0_input/di_wos_026.bib")
 
+categories <- read.csv(file = "0_input/jcr_categories.csv",
+                       header = TRUE, stringsAsFactors = FALSE)
+categories <- categories[1:234, ]
+journals <- read.csv(file = "0_input/jcr_journals.csv",
+                     header = TRUE, stringsAsFactors = FALSE)
+journals <- journals[1:12120, ]
+mjl <- read.csv(file = "0_input/mjl_index.csv",
+                header = TRUE, stringsAsFactors = FALSE)
+for (i in 1:ncol(mjl)) {
+  index <- grep(pattern = ">", x = mjl[, i])
+  if (length(index) > 0) {
+    mjl[index, i] <- gsub(pattern = ">", replacement = ",", x = mjl[index, i])
+  }
+}
+
 # ----- Parsing the data -----
 # Listing individual entries 
 index <- c(grep(pattern = "^@[[:alpha:]]+\\{", x = raw)-1, length(raw)+1)
@@ -63,6 +78,23 @@ for (i in 1:length(list_raw)) {
     rare[i,column] <- tolower(temp)
   }
 }
+
+lista <- unique(rare$research.areas)
+column <- grep(pattern = ";   ", x = lista)
+lista[column] <- gsub(pattern = ";   ", replacement = " ", x = lista[column])
+column <- grep(pattern = "\\\\&", x = lista)
+lista[column] <- gsub(pattern = "\\\\&", replacement = "&", x = lista[column])
+
+lista <- trimws(unlist(strsplit(na.omit(lista), split = ";")), which = "both")
+lista <- toupper(sort(unique(lista)))
+temp <- is.element(el = lista, set = index)
+
+head(rare$research.areas, n = 15)
+
+
+# Invert order to comply with chronographical order ascending.
+rare <- rare[nrow(rare):1, ]
+
 
 # ----- Closing project -----
 # Insert name and store of the interest dataframe
