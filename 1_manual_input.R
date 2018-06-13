@@ -80,10 +80,7 @@ for (i in 1:length(list_raw)) {
     rare[i,column] <- tolower(temp)
   }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> a7555a8de8c97213d83cdcacf35f8a76de67b0aa
 # Invert order to comply with chronographical order ascending.
 rare <- rare[nrow(rare):1, ]
 
