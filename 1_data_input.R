@@ -16,6 +16,10 @@ di_raw <- readFiles("0_input/di_wos_001.bib", "0_input/di_wos_002.bib", "0_input
 di <- convert2df(file = di_raw, dbsource = "isi", format = "bibtex")
 #proc.time() - ptm
 
+# Creation a local ID to preserve chronological order
+di <- di[nrow(di):1, ]
+di$local.id <- 1:nrow(di)
+
 # ----- Filtering interest articles -----
 # # Extracting unique data
 # entry.type <- as.data.frame(table(di$DT), stringsAsFactors = FALSE)
@@ -64,11 +68,16 @@ for (i in 1:nrow(categories)) {
   di_fil$SC[index] <- gsub(pattern = categories$unique[i], replacement = categories$global[i], x = di_fil$SC[index],
                            fixed = TRUE, ignore.case = TRUE)
 }
-
-
+# Removing empty files 
+index <- is.na(di_fil$SC)
+di_fil <- di_fil[!index, ]
+# ordering files according to chonological order 
+di_fil <- di_fil[order(di_fil$local.id, decreasing = FALSE), ]
+di_fil$local.id <- 1:nrow(di_fil)
 # Extracting subject categories
 sub_cat <- as.data.frame(table(trimws(unlist(strsplit(x = di_fil$SC, split = ";")), which = "both")), stringsAsFactors = FALSE)
 sub_cat <- sub_cat[order(sub_cat$Freq, decreasing = TRUE), ]
+
 
 # ----- Creating output files -----
 # Removing temporary files
