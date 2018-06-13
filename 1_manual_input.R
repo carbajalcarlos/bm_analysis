@@ -78,20 +78,6 @@ for (i in 1:length(list_raw)) {
     rare[i,column] <- tolower(temp)
   }
 }
-
-lista <- unique(rare$research.areas)
-column <- grep(pattern = ";   ", x = lista)
-lista[column] <- gsub(pattern = ";   ", replacement = " ", x = lista[column])
-column <- grep(pattern = "\\\\&", x = lista)
-lista[column] <- gsub(pattern = "\\\\&", replacement = "&", x = lista[column])
-
-lista <- trimws(unlist(strsplit(na.omit(lista), split = ";")), which = "both")
-lista <- toupper(sort(unique(lista)))
-temp <- is.element(el = lista, set = index)
-
-head(rare$research.areas, n = 15)
-
-
 # Invert order to comply with chronographical order ascending.
 rare <- rare[nrow(rare):1, ]
 
